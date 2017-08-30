@@ -9,6 +9,7 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 var crouserHandler = require('./routes/crouserHandler');
 var scrapeHandler = require('./routes/scrapeHandler');
+var cors = require('cors');
 
 var app = express();
 
@@ -22,34 +23,9 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(cors());
+
 app.use(express.static(path.join(__dirname, 'public')));
-
-app.use(function (req, res, next) {
-    var typeOf = false;
-    if (req.headers.origin) {
-        res.header('Access-Control-Allow-Origin', req.headers.origin);
-        res.header('Access-Control-Allow-Credentials', true);
-        typeOf = true;
-    }
-    if (req.headers['access-control-request-method']) {
-        res.header('Access-Control-Allow-Methods', req.headers['access-control-request-method']);
-        typeOf = true;
-    }
-    if (req.headers['access-control-request-headers']) {
-        res.header('Access-Control-Allow-Headers', req.headers['access-control-request-headers']);
-        typeOf = true;
-    }
-
-	/*
-	 * intercept OPTIONS method
-	 */
-    if (typeOf && req.method == 'OPTIONS') {
-        res.status(200).end();
-    }
-    else {
-        next();
-    }
-});
 
 
 app.use('/', index);
